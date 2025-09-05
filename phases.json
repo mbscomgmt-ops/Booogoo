@@ -1,0 +1,53 @@
+{
+  "brand": "MBS",
+  "phases": [
+    {
+      "id": 1,
+      "name": "Foundation & Validation",
+      "goal": "Establish credibility, brand identity, and consistent revenue.",
+      "milestones": [
+        "Register business & legal structure (LLC, insurance, licenses)",
+        "Build core brand assets (logo, website, booking/payment system)",
+        "Secure first 100 paying customers",
+        "Achieve baseline monthly revenue target ($10k/month)",
+        "Set up basic financial tracking & KPIs"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Growth & Team Building",
+      "goal": "Scale services and reduce reliance on solo effort.",
+      "milestones": [
+        "Hire and train first 3\u20135 team members/contractors",
+        "Expand service packages and pricing tiers",
+        "Secure 3\u20135 business partnerships or referral pipelines",
+        "Reach $25k\u2013$50k/month in consistent revenue",
+        "Build customer review & referral system"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Systems & Expansion",
+      "goal": "Build replicable systems and expand into new markets.",
+      "milestones": [
+        "Launch interactive operations dashboard & client experience",
+        "Standardize SOPs (service checklists, onboarding, wrap-up)",
+        "Expand into a second area/city",
+        "Hit $1M+ annual revenue",
+        "Reduce owner\u2019s direct labor to <20% of operations"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Legacy & Diversification",
+      "goal": "Transition from active operator to strategic leader/investor.",
+      "milestones": [
+        "Launch new verticals (MBS Real Estate, Travel, Community)",
+        "Establish passive income streams tied to brand",
+        "Reach $25M\u2013$100M long-term valuation targets",
+        "Build leadership team to run day-to-day",
+        "Create mentorship, franchise, or ambassador programs"
+      ]
+    }
+  ]
+}
