@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MBS Roadmap + Planner</title>
+  <meta name="description" content="MBS 4-phase roadmap (gated) and daily planner">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="bg"></div>
+  <header>
+    <h1>MBS Roadmap & Planner</h1>
+    <div class="subtitle">Four Phases. One Vision.</div>
+    <div class="navtabs">
+      <button class="tabbtn active" data-tab="roadmap">Roadmap</button>
+      <button class="tabbtn" data-tab="planner">Planner</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- Roadmap View -->
+    <section id="roadmap" class="tabview">
+      <div id="grid" class="grid"></div>
+    </section>
+
+    <!-- Planner View -->
+    <section id="planner" class="tabview hidden">
+      <div class="grid" style="grid-template-columns:1fr;">
+        <div class="card">
+          <div class="section-title">Daily Planner</div>
+          <div class="field">
+            <input type="date" id="planDate">
+            <input type="time" id="planTime" placeholder="Time">
+            <input type="text" id="planText" placeholder="Task description" style="flex:1;min-width:220px;">
+            <select id="planCat">
+              <option value="">Category</option>
+              <option>Operations</option>
+              <option>Sales</option>
+              <option>Marketing</option>
+              <option>Finance</option>
+              <option>Personal</option>
+            </select>
+            <input type="number" id="planDuration" placeholder="mins" min="0" style="width:90px">
+            <button id="addTaskBtn">Add</button>
+          </div>
+          <div class="list" id="taskList"></div>
+          <div class="hint">Tasks save automatically. Stored locally per day.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="foot">
+      <p>© 2025 MBS • Version 1.1 • Last updated: 2025-09-05</p>
+    </div>
+  </main>
+
+  <script>
+    // ---------- Tabs ----------
+    const tabs = document.querySelectorAll('.tabbtn');
+    const views = document.querySelectorAll('.tabview');
+    tabs.forEach(t => t.addEventListener('click', () => {
+      tabs.forEach(b => b.classList.remove('active'));
+      t.classList.add('active');
+      views.forEach(v => v.classList.add('hidden'));
+      document.getElementById(t.dataset.tab).classList.remove('hidden');
+    }));
+
+    // ---------- Roadmap (Gated & Blurred) ----------
+    const data = {
+      "brand": "MBS",
+      "phases": [
+        {
+          "id": 1,
+          "name": "Foundation & Validation",
+          "goal": "Establish credibility, brand identity, and consistent revenue.",
+          "milestones": [
+            "Register business & legal structure (LLC, insurance, licenses)",
+            "Build core brand assets (logo, website, booking/payment system)",
+            "Secure first 100 paying customers",
+            "Achieve baseline monthly revenue target ($10k/month)",
+            "Set up basic financial tracking & KPIs"
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Growth & Team Building",
+          "goal": "Scale services and reduce reliance on solo effort.",
+          "milestones": [
+            "Hire and train first 3–5 team members/contractors",
+            "Expand service packages and pricing tiers",
+            "Secure 3–5 business partnerships or referral pipelines",
+            "Reach $25k–$50k/month in consistent revenue",
+            "Build customer review & referral system"
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Systems & Expansion",
+          "goal": "Build replicable systems and expand into new markets.",
+          "milestones": [
+            "Launch interactive operations dashboard & client experience",
+            "Standardize SOPs (service checklists, onboarding, wrap-up)",
+            "Expand into a second area/city",
+            "Hit $1M+ annual revenue",
+            "Reduce owner’s direct labor to <20% of operations"
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Legacy & Diversification",
+          "goal": "Transition from active operator to strategic leader/investor.",
+          "milestones": [
+            "Launch new verticals (MBS Real Estate, Travel, Community)",
+            "Establish passive income streams tied to brand",
+            "Reach $25M–$100M long-term valuation targets",
+            "Build leadership team to run day-to-day",
+            "Create mentorship, franchise, or ambassador programs"
+          ]
+        }
+      ]
+    };
+
+    const grid = document.getElementById('grid');
+
+    function keyMilestone(id, i){ return `mbs:phase:${id}:milestone:${i}`; }
+    function phaseProgress(id, count){
+      let done = 0;
+      for(let i=0;i<count;i++){ if(localStorage.getItem(keyMilestone(id,i))==='1') done++; }
+      return Math.round((done/count)*100);
+    }
+    function isComplete(phase){ return phaseProgress(phase.id, phase.milestones.length) === 100; }
+
+    function renderRoadmap(){
+      grid.innerHTML = '';
+      data.phases.forEach((phase, idx) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        const count = phase.milestones.length;
+        const pct = phaseProgress(phase.id, count);
+
+        const details = document.createElement('details');
+        const summary = document.createElement('summary');
+        summary.innerHTML = `
+          <div>
+            <div class="phase-num">Phase ${phase.id}</div>
+            ${phase.name}
+          </div>
+          <div class="small">${pct}%</div>
+        `;
+        details.appendChild(summary);
+
+        const goal = document.createElement('div');
+        goal.className = 'goal';
+        goal.textContent = phase.goal;
+        details.appendChild(goal);
+
+        const ul = document.createElement('ul');
+        phase.milestones.forEach((m, i) => {
+          const li = document.createElement('li');
+          const cb = document.createElement('input');
+          cb.type = 'checkbox';
+          cb.setAttribute('data-phase', phase.id);
+          cb.setAttribute('data-index', i);
+          if(localStorage.getItem(keyMilestone(phase.id,i))==='1') cb.checked = true;
+          const span = document.createElement('span');
+          span.textContent = m;
+          li.appendChild(cb);
+          li.appendChild(span);
+          ul.appendChild(li);
+        });
+        details.appendChild(ul);
+
+        const prog = document.createElement('div');
+        prog.className = 'progress';
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        bar.style.width = pct + '%';
+        prog.appendChild(bar);
+        details.appendChild(prog);
+
+        // Gating: only open if unlocked
+        const unlocked = (idx === 0) ? true : isComplete(data.phases[idx - 1]);
+        if(unlocked) details.open = true;
+        else {
+          details.classList.add('locked');
+          const banner = document.createElement('div');
+          banner.className = 'lock-banner';
+          banner.textContent = 'Locked — Complete previous phase to unlock';
+          card.appendChild(banner);
+          ul.querySelectorAll('input[type="checkbox"]').forEach(el => el.disabled = true);
+          // Prevent toggling the <details>
+          details.addEventListener('click', (e) => e.preventDefault(), true);
+          const blocker = document.createElement('div');
+          blocker.className = 'blocker';
+          blocker.addEventListener('click', (e)=> e.preventDefault());
+          card.appendChild(blocker);
+        }
+
+        ul.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+          cb.addEventListener('change', e => {
+            const phaseId = e.target.getAttribute('data-phase');
+            const midx = e.target.getAttribute('data-index');
+            localStorage.setItem(keyMilestone(phaseId, midx), e.target.checked ? '1' : '0');
+            renderRoadmap();
+          });
+        });
+
+        card.appendChild(details);
+        grid.appendChild(card);
+      });
+    }
+    renderRoadmap();
+
+    // ---------- Planner ----------
+    const planDate = document.getElementById('planDate');
+    const planTime = document.getElementById('planTime');
+    const planText = document.getElementById('planText');
+    const planCat = document.getElementById('planCat');
+    const planDuration = document.getElementById('planDuration');
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    const taskList = document.getElementById('taskList');
+
+    function todayStr(){
+      const d = new Date();
+      const m = String(d.getMonth()+1).padStart(2,'0');
+      const da = String(d.getDate()).padStart(2,'0');
+      return `${d.getFullYear()}-${m}-${da}`;
+    }
+    planDate.value = todayStr();
+
+    function keyDay(dateStr){ return `mbs:planner:${dateStr}`; }
+
+    function loadDay(dateStr){
+      try{ return JSON.parse(localStorage.getItem(keyDay(dateStr)) || '[]'); } catch(e){ return []; }
+    }
+    function saveDay(dateStr, items){
+      localStorage.setItem(keyDay(dateStr), JSON.stringify(items));
+      renderList();
+    }
+
+    function renderList(){
+      const items = loadDay(planDate.value);
+      taskList.innerHTML = '';
+      items.forEach((it, idx) => {
+        const row = document.createElement('div');
+        row.className = 'item';
+        const cb = document.createElement('input'); cb.type='checkbox'; cb.checked=!!it.done;
+        const main = document.createElement('div');
+        const top = document.createElement('div'); top.className='row';
+        const title = document.createElement('strong'); title.textContent = it.text || '(Untitled task)';
+        const meta = document.createElement('small'); meta.textContent = [it.time, it.cat, it.duration? it.duration+'m': ''].filter(Boolean).join(' · ');
+        top.appendChild(title);
+        if(it.cat){ const pill=document.createElement('span'); pill.className='pill'; pill.textContent=it.cat; top.appendChild(pill); }
+        main.appendChild(top); main.appendChild(meta);
+        const right = document.createElement('div'); right.className='right';
+        const del = document.createElement('button'); del.textContent='Delete';
+        right.appendChild(del);
+        row.appendChild(cb); row.appendChild(main); row.appendChild(right);
+        taskList.appendChild(row);
+
+        cb.addEventListener('change', ()=>{ const arr=loadDay(planDate.value); arr[idx].done=cb.checked; saveDay(planDate.value, arr); });
+        del.addEventListener('click', ()=>{ const arr=loadDay(planDate.value); arr.splice(idx,1); saveDay(planDate.value, arr); });
+      });
+    }
+
+    addTaskBtn.addEventListener('click', () => {
+      const item = {
+        time: planTime.value || '',
+        text: planText.value.trim(),
+        cat: planCat.value || '',
+        duration: planDuration.value ? parseInt(planDuration.value, 10) : 0,
+        done: false
+      };
+      const arr = loadDay(planDate.value);
+      arr.push(item);
+      saveDay(planDate.value, arr);
+      planText.value=''; planDuration.value='';
+    });
+    planDate.addEventListener('change', renderList);
+    renderList();
+  </script>
+</body>
+</html>

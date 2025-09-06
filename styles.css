@@ -1,0 +1,103 @@
+/* MBS Roadmap & Planner — v1.1 (Gated, Mountain BG, Cool Slate Theme) */
+:root{
+  /* Cool slate palette to match mountain background */
+  --bg1:#0b1220;          /* deep navy */
+  --bg2:#091426;          /* midnight slate */
+  --muted:#a8b3c7;        /* cool gray text */
+  --white:#ffffff;
+  --accent:#cfe6ff;       /* icy highlight */
+  --card:#121c33;         /* translucent card base */
+}
+
+/* Background image layer (place mountains.jpg in repo root) */
+.bg::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.55)),
+    url('mountains.jpg') center/cover no-repeat,
+    linear-gradient(180deg, var(--bg1), var(--bg2)); /* fallback gradient */
+  filter: blur(8px) saturate(1.1) brightness(.8);
+  transform: scale(1.04); /* avoid edge cut after blur */
+  z-index:-2;
+}
+.bg::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  background: radial-gradient(1200px 600px at 50% -10%, rgba(255,255,255,.08), transparent 60%);
+  z-index:-1;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;color:var(--white);font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
+a{color:var(--white);text-decoration:underline}
+header{padding:42px 16px 24px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.08);}
+.wrap{max-width:1000px;margin:0 auto;padding:16px 16px 64px}
+h1{margin:10px 0 6px;font-size:28px;letter-spacing:.3px}
+.subtitle{color:var(--muted);font-size:14px}
+.navtabs{display:flex;gap:8px;justify-content:center;margin:14px 0 0}
+.tabbtn{padding:8px 14px;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(255,255,255,.06);cursor:pointer;color:var(--white)}
+.tabbtn.active{background:rgba(255,255,255,.14)}
+
+.grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px}
+@media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
+
+.card{
+  position:relative;
+  background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:16px;
+  padding:18px 16px;
+  backdrop-filter: blur(6px);
+  box-shadow:0 6px 30px rgba(0,0,0,.35);
+}
+
+summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;padding:10px 0;font-weight:600;font-size:18px;}
+summary::-webkit-details-marker{display:none}
+.goal{color:var(--muted);font-size:14px;margin:-8px 0 10px}
+ul{list-style:none;padding:0;margin:0}
+li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,.10)}
+li:last-child{border-bottom:none}
+
+input[type="checkbox"]{
+  width:18px;height:18px;border-radius:4px;
+  border:1px solid rgba(255,255,255,.35);
+  background:rgba(255,255,255,.06);
+  appearance:none;cursor:pointer;
+}
+input[type="checkbox"]:checked{background:var(--white);border-color:var(--white)}
+
+.progress{height:8px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden;margin-top:10px}
+.bar{height:100%;width:0%;background:linear-gradient(90deg, var(--white), var(--accent))}
+.foot{margin-top:18px;font-size:12px;color:var(--muted);text-align:center}
+.small{font-size:12px;color:var(--muted)}
+.phase-num{font-size:12px;color:var(--muted);}
+
+/* Gating visuals */
+.locked{filter:blur(2px) contrast(0.9) opacity(0.65);}
+.lock-banner{
+  position:absolute;top:12px;right:12px;
+  background:rgba(15,22,35,0.55);
+  border:1px solid rgba(255,255,255,0.18);
+  backdrop-filter:blur(4px);
+  padding:6px 10px;border-radius:999px;font-size:12px;color:var(--muted);
+}
+.blocker{position:absolute;inset:0}
+
+/* Planner */
+.field{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.field input, .field select, .field button, .field textarea{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);color:var(--white);
+  border-radius:10px;padding:10px 12px;font-size:14px;
+}
+.field button{cursor:pointer}
+.list{margin-top:8px}
+.item{display:flex;align-items:flex-start;gap:10px;padding:10px;border:1px dashed rgba(255,255,255,.18);border-radius:12px;margin-bottom:8px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.right{margin-left:auto;display:flex;gap:6px}
+.pill{padding:2px 8px;border:1px solid rgba(255,255,255,.22);border-radius:999px;color:var(--muted);font-size:12px}
+.section-title{font-weight:700;font-size:18px;margin:4px 0 8px}
+.hint{color:var(--muted);font-size:12px}
+.hidden{display:none}
